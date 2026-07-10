@@ -1,317 +1,310 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>調号マスター v0.2.0</title>
-  <style>
-    :root { color-scheme: light; }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
-      background: #fff;
-      color: #111;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-    .app { width: min(100%, 430px); }
-    .screen { display: none; }
-    .screen.active { display: block; }
-    h1 { font-size: 36px; margin: 0 0 8px; text-align: center; }
-    h2 { font-size: 28px; margin: 0 0 20px; text-align: center; }
-    .version { text-align: center; color: #666; margin-bottom: 28px; }
-    .panel {
-      border: 1px solid #ddd;
-      border-radius: 18px;
-      padding: 20px;
-      background: #fff;
-    }
-    .mode-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin: 18px 0;
-    }
-    .mode-btn, .primary, .secondary {
-      width: 100%;
-      min-height: 52px;
-      border-radius: 14px;
-      font-size: 18px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .mode-btn {
-      border: 2px solid #bbb;
-      background: #fff;
-    }
-    .mode-btn.selected {
-      border-color: #111;
-      background: #f3f3f3;
-    }
-    .primary {
-      border: none;
-      background: #111;
-      color: #fff;
-      margin-top: 10px;
-    }
-    .secondary {
-      border: 1px solid #bbb;
-      background: #fff;
-      margin-top: 10px;
-    }
-    .hidden { display: none !important; }
-    label {
-      display: block;
-      text-align: left;
-      font-weight: 700;
-      margin: 14px 0 8px;
-    }
-    select {
-      width: 100%;
-      min-height: 50px;
-      font-size: 18px;
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid #bbb;
-      background: #fff;
-    }
-    select:disabled { background: #f3f3f3; color: #555; }
-    .question {
-      font-size: 34px;
-      font-weight: 800;
-      text-align: center;
-      margin: 20px 0;
-    }
-    .status {
-      text-align: center;
-      color: #666;
-      margin-bottom: 8px;
-    }
-    .message {
-      min-height: 32px;
-      text-align: center;
-      font-weight: 700;
-      line-height: 1.55;
-      margin-top: 14px;
-      white-space: pre-line;
-    }
-    .answer-box {
-      margin-top: 14px;
-      padding: 14px;
-      border-radius: 12px;
-      background: #f3f3f3;
-      text-align: center;
-      font-size: 18px;
-      font-weight: 700;
-      line-height: 1.6;
-    }
-    .note {
-      text-align: center;
-      color: #666;
-      font-size: 14px;
-      margin-top: 12px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f7f0df">
+<title>調号マスター Version 0.2</title>
+<style>
+:root{
+  --ivory:#f7f0df;
+  --paper:#fffdf6;
+  --ink:#263238;
+  --muted:#6d756f;
+  --line:#d8cfbb;
+  --green:#3d7f70;
+  --green-dark:#2f6559;
+  --green-soft:#dceee8;
+  --major:#e7f0f8;
+  --minor:#f6e8d8;
+  --danger:#b64b4b;
+  --shadow:0 6px 0 #cfc4ad, 0 10px 18px rgba(65,53,35,.12);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--ivory);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif}
+body{padding:env(safe-area-inset-top) 14px calc(18px + env(safe-area-inset-bottom))}
+.app{max-width:620px;margin:0 auto}
+.screen{display:none}
+.screen.active{display:block}
+.card{background:rgba(255,253,246,.94);border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:0 14px 36px rgba(74,61,41,.12)}
+h1{font-size:32px;letter-spacing:.04em;text-align:center;margin:4px 0 2px}
+.version{text-align:center;color:var(--muted);font-size:13px;margin-bottom:14px}
+.lead{text-align:center;color:var(--muted);font-size:14px;margin:8px 0 16px}
+.circle-wrap{background:#fffaf0;border:1px solid var(--line);border-radius:20px;padding:8px;margin:12px 0 18px}
+svg{display:block;width:100%;height:auto}
+.primary,.secondary{
+  width:100%;border:0;border-radius:16px;font-weight:800;font-size:18px;padding:16px 18px;cursor:pointer;
+  transition:transform .08s ease, box-shadow .08s ease, filter .08s ease;
+}
+.primary{background:var(--green);color:white;box-shadow:0 6px 0 var(--green-dark),0 10px 16px rgba(47,101,89,.18)}
+.secondary{background:#eee5d3;color:var(--ink);box-shadow:0 5px 0 #cfc4ad}
+.primary:active,.secondary:active,.option:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.18)}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:10px}
+.badge{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:9px 13px;font-weight:700;box-shadow:0 3px 0 #d7cdb8}
+.question{background:var(--paper);border:1px solid var(--line);border-radius:22px;text-align:center;padding:18px 12px;margin-bottom:14px;box-shadow:0 6px 0 #d7cdb8}
+.question small{display:block;color:var(--muted);font-weight:700;margin-bottom:4px}
+.question strong{font-size:36px;letter-spacing:.05em}
+.rule{text-align:center;font-size:14px;color:var(--muted);margin:12px 0}
+.options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.option{
+  appearance:none;-webkit-appearance:none;background:var(--paper);border:1px solid var(--line);border-radius:14px;
+  min-height:54px;padding:10px 6px;font-size:17px;font-weight:800;color:var(--ink);cursor:pointer;
+  box-shadow:0 5px 0 #d4c8b1,0 8px 12px rgba(68,56,37,.08);
+  display:flex;align-items:center;justify-content:center;gap:7px;transition:.08s ease;
+}
+.option::before{content:"○";font-size:19px;color:#8d938f}
+.option.selected{background:var(--green-soft);border-color:#7fa99f;box-shadow:0 5px 0 #7fa99f,0 8px 12px rgba(61,127,112,.15)}
+.option.selected::before{content:"●";color:var(--green)}
+.option.major{background:var(--major)}
+.option.minor{background:var(--minor)}
+.option.major.selected,.option.minor.selected{background:var(--green-soft)}
+.actions{position:sticky;bottom:0;padding:15px 0 6px;background:linear-gradient(transparent,var(--ivory) 30%)}
+.feedback{display:none;margin:14px 0 0;border-radius:16px;padding:14px;text-align:center;font-weight:700}
+.feedback.show{display:block}
+.feedback.ok{background:#dff1e7;color:#245f48}
+.feedback.ng{background:#f7dddd;color:#8f3535}
+.retry-row{display:none;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.retry-row.show{display:grid}
+.result{text-align:center}
+.result .big{font-size:56px;margin:6px 0}
+.result h2{font-size:28px;margin:0 0 8px}
+.summary{background:#fffaf0;border:1px solid var(--line);border-radius:16px;padding:14px;margin:14px 0;text-align:left}
+.summary p{margin:7px 0}
+.note{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
+.legend{display:flex;justify-content:center;gap:10px;font-size:12px;color:var(--muted);margin:8px 0 0}
+.dot{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:4px;vertical-align:-1px;border:1px solid #c7c7c7}
+@media(max-width:380px){
+  .option{font-size:15px;min-height:49px}
+  .options{gap:8px}
+  h1{font-size:28px}
+}
+</style>
 </head>
 <body>
-  <main class="app">
-    <section id="splash" class="screen active">
+<div class="app">
+  <section id="home" class="screen active">
+    <div class="card">
       <h1>調号マスター</h1>
-      <div class="version">Version 0.2.0</div>
-      <button id="enterBtn" class="primary" type="button">はじめる</button>
-    </section>
+      <div class="version">Version 0.2</div>
+      <p class="lead">調号から、対応する2つのキーを当てよう。</p>
 
-    <section id="menu" class="screen">
-      <h2>モード選択</h2>
-      <div class="panel">
-        <div class="mode-row">
-          <button id="sharpBtn" class="mode-btn selected" type="button">♯モード</button>
-          <button id="flatBtn" class="mode-btn" type="button">♭モード</button>
-        </div>
-        <button id="startBtn" class="primary" type="button">START</button>
-        <div class="note">間違えた問題は、最後にもう一度出題されます。</div>
+      <div class="circle-wrap" aria-label="五度圏表">
+        <svg viewBox="0 0 520 520" role="img" aria-label="五度圏">
+          <defs>
+            <filter id="s"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-opacity=".13"/></filter>
+          </defs>
+          <circle cx="260" cy="260" r="220" fill="#fbf4df" stroke="#d8cfbb" stroke-width="3" filter="url(#s)"/>
+          <circle cx="260" cy="260" r="148" fill="#eef5e5" stroke="#cbd6c0" stroke-width="3"/>
+          <circle cx="260" cy="260" r="78" fill="#fffdf6" stroke="#d8cfbb" stroke-width="3"/>
+          <text x="260" y="250" text-anchor="middle" font-size="28" font-weight="800" fill="#334">五度圏</text>
+          <text x="260" y="278" text-anchor="middle" font-size="14" fill="#6d756f">Circle of Fifths</text>
+
+          <g font-size="25" font-weight="800" text-anchor="middle" fill="#334">
+            <text x="260" y="63">C</text>
+            <text x="362" y="91">G</text>
+            <text x="437" y="165">D</text>
+            <text x="463" y="267">A</text>
+            <text x="437" y="369">E</text>
+            <text x="362" y="444">B</text>
+            <text x="260" y="470">F♯</text>
+            <text x="158" y="444">D♭</text>
+            <text x="83" y="369">A♭</text>
+            <text x="57" y="267">E♭</text>
+            <text x="83" y="165">B♭</text>
+            <text x="158" y="91">F</text>
+          </g>
+          <g font-size="19" font-weight="700" text-anchor="middle" fill="#465a53">
+            <text x="260" y="128">Am</text>
+            <text x="326" y="146">Em</text>
+            <text x="374" y="194">Bm</text>
+            <text x="392" y="262">F♯m</text>
+            <text x="374" y="330">C♯m</text>
+            <text x="326" y="379">G♯m</text>
+            <text x="260" y="396">D♯m</text>
+            <text x="194" y="379">B♭m</text>
+            <text x="146" y="330">Fm</text>
+            <text x="128" y="262">Cm</text>
+            <text x="146" y="194">Gm</text>
+            <text x="194" y="146">Dm</text>
+          </g>
+          <g font-size="13" fill="#736c61" text-anchor="middle">
+            <text x="414" y="106">♯が増える →</text>
+            <text x="107" y="106">← ♭が増える</text>
+          </g>
+        </svg>
       </div>
-    </section>
 
-    <section id="game" class="screen">
-      <div class="status" id="progress">問題 1 / 8</div>
-      <div class="question" id="question">♯が0個</div>
+      <button id="startBtn" class="primary">START</button>
+      <div class="note">全12問・制限時間60秒・問題はランダム</div>
+    </div>
+  </section>
 
-      <div class="panel">
-        <label for="majorSelect">長調</label>
-        <select id="majorSelect"></select>
+  <section id="quiz" class="screen">
+    <div class="topbar">
+      <div id="progress" class="badge">1 / 12</div>
+      <div id="timer" class="badge">60秒</div>
+    </div>
 
-        <label for="minorSelect">短調</label>
-        <select id="minorSelect"></select>
+    <div class="question">
+      <small>この調号に対応するキーは？</small>
+      <strong id="signature">♯が3つ</strong>
+    </div>
 
-        <button id="answerBtn" class="primary" type="button">回答</button>
-        <button id="nextBtn" class="primary hidden" type="button">次の問題へ</button>
-        <button id="menuBtn" class="secondary" type="button">メニューへ戻る</button>
+    <div class="rule">対応するキーを<strong>2つ</strong>選んでください</div>
+    <div class="legend">
+      <span><i class="dot" style="background:#e7f0f8"></i>メジャー表記</span>
+      <span><i class="dot" style="background:#f6e8d8"></i>m付き表記</span>
+    </div>
 
-        <div id="message" class="message"></div>
-        <div id="answerBox" class="answer-box hidden"></div>
-      </div>
-    </section>
-  </main>
+    <div id="options" class="options" aria-label="回答候補"></div>
 
-  <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const screens = {
-      splash: document.getElementById("splash"),
-      menu: document.getElementById("menu"),
-      game: document.getElementById("game")
-    };
+    <div id="feedback" class="feedback"></div>
+    <div id="retryRow" class="retry-row">
+      <button id="retryBtn" class="secondary">もう一度回答する</button>
+      <button id="nextBtn" class="primary">次の問題へ</button>
+    </div>
 
-    const sharpData = [
-      { n: 0, major: "C",  minor: "Am" },
-      { n: 1, major: "G",  minor: "Em" },
-      { n: 2, major: "D",  minor: "Bm" },
-      { n: 3, major: "A",  minor: "F#m" },
-      { n: 4, major: "E",  minor: "C#m" },
-      { n: 5, major: "B",  minor: "G#m" },
-      { n: 6, major: "F#", minor: "D#m" },
-      { n: 7, major: "C#", minor: "A#m" }
-    ];
+    <div id="answerArea" class="actions">
+      <button id="answerBtn" class="primary">回答する</button>
+    </div>
+  </section>
 
-    const flatData = [
-      { n: 0, major: "C",  minor: "Am" },
-      { n: 1, major: "F",  minor: "Dm" },
-      { n: 2, major: "B♭", minor: "Gm" },
-      { n: 3, major: "E♭", minor: "Cm" },
-      { n: 4, major: "A♭", minor: "Fm" },
-      { n: 5, major: "D♭", minor: "B♭m" },
-      { n: 6, major: "G♭", minor: "E♭m" },
-      { n: 7, major: "C♭", minor: "A♭m" }
-    ];
+  <section id="result" class="screen">
+    <div class="card result">
+      <div class="big">🎷</div>
+      <h2 id="resultTitle">結果</h2>
+      <div id="summary" class="summary"></div>
+      <button id="reviewBtn" class="primary" style="display:none;margin-bottom:12px">間違えた問題だけ復習</button>
+      <button id="restartBtn" class="secondary">最初から遊ぶ</button>
+    </div>
+  </section>
+</div>
 
-    const majorOptions = ["C","G","D","A","E","B","F#","C#","F","B♭","E♭","A♭","D♭","G♭","C♭"];
-    const minorOptions = ["Am","Em","Bm","F#m","C#m","G#m","D#m","A#m","Dm","Gm","Cm","Fm","B♭m","E♭m","A♭m"];
+<script>
+const QUESTIONS = [
+  {sig:"調号なし", answers:["C","Am"]},
+  {sig:"♯が1つ", answers:["G","Em"]},
+  {sig:"♯が2つ", answers:["D","Bm"]},
+  {sig:"♯が3つ", answers:["A","F♯m"]},
+  {sig:"♯が4つ", answers:["E","C♯m"]},
+  {sig:"♯が5つ", answers:["B","G♯m"]},
+  {sig:"♯が6つ", answers:["F♯","D♯m"]},
+  {sig:"♭が1つ", answers:["F","Dm"]},
+  {sig:"♭が2つ", answers:["B♭","Gm"]},
+  {sig:"♭が3つ", answers:["E♭","Cm"]},
+  {sig:"♭が4つ", answers:["A♭","Fm"]},
+  {sig:"♭が5つ", answers:["D♭","B♭m"]}
+];
 
-    const majorSelect = document.getElementById("majorSelect");
-    const minorSelect = document.getElementById("minorSelect");
-    const answerBtn = document.getElementById("answerBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const message = document.getElementById("message");
-    const answerBox = document.getElementById("answerBox");
-    const progress = document.getElementById("progress");
-    const question = document.getElementById("question");
+const ALL_KEYS = ["C","G","D","A","E","B","F♯","F","B♭","E♭","A♭","D♭",
+                  "Am","Em","Bm","F♯m","C♯m","G♯m","D♯m","Dm","Gm","Cm","Fm","B♭m"];
 
-    let mode = "sharp";
-    let queue = [];
-    let currentIndex = 0;
-    let totalAnswered = 0;
-    let waitingForNext = false;
+const $ = id => document.getElementById(id);
+let queue=[], index=0, selected=[], wrong=[], score=0, timeLeft=60, timerId=null, reviewMode=false, locked=false;
 
-    function show(name) {
-      Object.values(screens).forEach(el => el.classList.remove("active"));
-      screens[name].classList.add("active");
-    }
-
-    function fillSelect(select, values) {
-      select.innerHTML = '<option value="">選択してください</option>';
-      values.forEach(value => {
-        const option = document.createElement("option");
-        option.value = value;
-        option.textContent = value;
-        select.appendChild(option);
-      });
-    }
-
-    function setControlsLocked(locked) {
-      majorSelect.disabled = locked;
-      minorSelect.disabled = locked;
-      answerBtn.classList.toggle("hidden", locked);
-      nextBtn.classList.toggle("hidden", !locked);
-      waitingForNext = locked;
-    }
-
-    function renderQuestion() {
-      const q = queue[currentIndex];
-      if (!q) {
-        alert("全問クリアです！");
-        show("menu");
-        return;
-      }
-
-      progress.textContent = `問題 ${totalAnswered + 1}`;
-      question.textContent = `${mode === "sharp" ? "♯" : "♭"}が${q.n}個`;
-      majorSelect.value = "";
-      minorSelect.value = "";
-      message.textContent = "";
-      answerBox.textContent = "";
-      answerBox.classList.add("hidden");
-      setControlsLocked(false);
-    }
-
-    function moveNext() {
-      currentIndex += 1;
-      totalAnswered += 1;
-      renderQuestion();
-    }
-
-    fillSelect(majorSelect, majorOptions);
-    fillSelect(minorSelect, minorOptions);
-
-    document.getElementById("enterBtn").addEventListener("click", () => show("menu"));
-
-    document.getElementById("sharpBtn").addEventListener("click", function () {
-      mode = "sharp";
-      this.classList.add("selected");
-      document.getElementById("flatBtn").classList.remove("selected");
-    });
-
-    document.getElementById("flatBtn").addEventListener("click", function () {
-      mode = "flat";
-      this.classList.add("selected");
-      document.getElementById("sharpBtn").classList.remove("selected");
-    });
-
-    document.getElementById("startBtn").addEventListener("click", function () {
-      queue = (mode === "sharp" ? sharpData : flatData).map(q => ({...q}));
-      currentIndex = 0;
-      totalAnswered = 0;
-      renderQuestion();
-      show("game");
-    });
-
-    answerBtn.addEventListener("click", function () {
-      if (waitingForNext) return;
-
-      const q = queue[currentIndex];
-      const major = majorSelect.value;
-      const minor = minorSelect.value;
-
-      if (!major || !minor) {
-        message.textContent = "長調と短調を両方選んでください";
-        return;
-      }
-
-      const correct = major === q.major && minor === q.minor;
-
-      if (correct) {
-        message.textContent = "正解";
-      } else {
-        message.textContent = "不正解";
-        answerBox.textContent = `正解は「${q.major} / ${q.minor}」です`;
-        answerBox.classList.remove("hidden");
-
-        // 間違えた問題を、最後にもう一度追加する
-        queue.push({...q});
-      }
-
-      setControlsLocked(true);
-    });
-
-    nextBtn.addEventListener("click", moveNext);
-
-    document.getElementById("menuBtn").addEventListener("click", function () {
-      show("menu");
-    });
+function shuffle(a){
+  const b=[...a];
+  for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}
+  return b;
+}
+function show(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  $(id).classList.add("active");
+}
+function start(review=false){
+  reviewMode=review;
+  queue=review ? shuffle([...wrong]) : shuffle([...QUESTIONS]);
+  index=0; selected=[]; score=0; locked=false; timeLeft=60; wrong=[];
+  show("quiz"); renderQuestion(); startTimer();
+}
+function startTimer(){
+  clearInterval(timerId);
+  $("timer").textContent=timeLeft+"秒";
+  timerId=setInterval(()=>{
+    timeLeft--;
+    $("timer").textContent=timeLeft+"秒";
+    if(timeLeft<=0){clearInterval(timerId); finish(true);}
+  },1000);
+}
+function renderQuestion(){
+  if(index>=queue.length){finish(false);return}
+  selected=[]; locked=false;
+  $("feedback").className="feedback";
+  $("retryRow").className="retry-row";
+  $("answerArea").style.display="block";
+  $("progress").textContent=`${index+1} / ${queue.length}`;
+  $("signature").textContent=queue[index].sig;
+  const options=$("options"); options.innerHTML="";
+  shuffle(ALL_KEYS).forEach(key=>{
+    const btn=document.createElement("button");
+    btn.className="option "+(key.includes("m")?"minor":"major");
+    btn.textContent=key;
+    btn.onclick=()=>toggleKey(key,btn);
+    options.appendChild(btn);
   });
-  </script>
+}
+function toggleKey(key,btn){
+  if(locked)return;
+  if(selected.includes(key)){
+    selected=selected.filter(x=>x!==key); btn.classList.remove("selected");
+  }else{
+    if(selected.length>=2)return;
+    selected.push(key); btn.classList.add("selected");
+  }
+}
+function samePair(a,b){
+  return a.length===2 && b.every(x=>a.includes(x));
+}
+function answer(){
+  if(selected.length!==2){
+    $("feedback").textContent="2つ選んでから回答してください";
+    $("feedback").className="feedback show ng";
+    return;
+  }
+  locked=true;
+  const q=queue[index];
+  if(samePair(selected,q.answers)){
+    score++;
+    $("feedback").textContent="正解！";
+    $("feedback").className="feedback show ok";
+    $("answerArea").style.display="none";
+    setTimeout(()=>{index++;renderQuestion()},650);
+  }else{
+    if(!wrong.some(x=>x.sig===q.sig)) wrong.push(q);
+    $("feedback").textContent="不正解です。もう一度挑戦できます。";
+    $("feedback").className="feedback show ng";
+    $("answerArea").style.display="none";
+    $("retryRow").className="retry-row show";
+  }
+}
+function retry(){
+  selected=[]; locked=false;
+  document.querySelectorAll(".option").forEach(b=>b.classList.remove("selected"));
+  $("feedback").className="feedback";
+  $("retryRow").className="retry-row";
+  $("answerArea").style.display="block";
+}
+function next(){
+  index++; renderQuestion();
+}
+function finish(timeout){
+  clearInterval(timerId);
+  show("result");
+  const answered=Math.min(index,queue.length);
+  $("resultTitle").textContent=timeout?"タイムアップ！":"クリア！";
+  $("summary").innerHTML=`
+    <p><strong>正解：</strong>${score}問</p>
+    <p><strong>出題：</strong>${queue.length}問</p>
+    <p><strong>残り時間：</strong>${Math.max(timeLeft,0)}秒</p>
+    <p><strong>復習対象：</strong>${wrong.length}問</p>`;
+  $("reviewBtn").style.display=wrong.length?"block":"none";
+}
+$("startBtn").onclick=()=>start(false);
+$("answerBtn").onclick=answer;
+$("retryBtn").onclick=retry;
+$("nextBtn").onclick=next;
+$("restartBtn").onclick=()=>{clearInterval(timerId);show("home")};
+$("reviewBtn").onclick=()=>start(true);
+</script>
 </body>
 </html>
