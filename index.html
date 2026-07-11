@@ -4,426 +4,162 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f7f0df">
-<title>調号マスター Version 0.4</title>
+<title>調号マスター Version 0.5</title>
 <style>
-:root{
-  --ivory:#f7f0df;--paper:#fffdf7;--ink:#25302f;--muted:#6f756f;
-  --line:#d7ccb6;--green:#3f7d70;--green2:#2f6258;--soft:#dceee8;
-  --blue:#e8f0f7;--orange:#f6e8d8;--shadow:#cdbfa6;--red:#873838
-}
+:root{--ivory:#f7f0df;--paper:#fffdf7;--ink:#25302f;--muted:#6f756f;--line:#d7ccb6;--green:#3f7d70;--green2:#2f6258;--soft:#dceee8;--blue:#e8f0f7;--orange:#f6e8d8;--shadow:#cdbfa6;--red:#873838}
 *{box-sizing:border-box}
-body{
-  margin:0;background:var(--ivory);color:var(--ink);
-  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;
-  padding:14px 14px 24px
-}
-button{font:inherit}
-.app{max-width:620px;margin:auto}
-.screen{display:none}.screen.active{display:block}
-.panel{
-  background:var(--paper);border:1px solid var(--line);border-radius:24px;
-  padding:20px;box-shadow:0 14px 34px #4b3c261f
-}
-h1{text-align:center;margin:4px 0 0;font-size:31px}
-.version,.subtitle{text-align:center;color:var(--muted)}
-.version{font-size:12px;margin:4px 0 12px}.subtitle{font-size:14px;margin:0 0 16px}
-.circle{background:#fffaf0;border:1px solid var(--line);border-radius:20px;padding:8px;margin-bottom:18px}
-svg{display:block;width:100%;height:auto}
-.levels{display:grid;gap:12px}
-.level,.option,.primary,.secondary,.danger,.badge{transition:.08s;cursor:pointer}
-.level{
-  width:100%;text-align:left;background:var(--paper);border:1px solid var(--line);
-  border-radius:17px;padding:15px 16px;box-shadow:0 5px 0 var(--shadow)
-}
-.level strong{display:block;font-size:18px;margin-bottom:4px}
-.level span{font-size:13px;color:var(--muted);line-height:1.5}
-.level:active,.option:active,.primary:active,.secondary:active,.danger:active{
-  transform:translateY(4px);box-shadow:0 2px 0 #0003
-}
+body{margin:0;background:var(--ivory);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;padding:14px 14px 28px}
+button,select{font:inherit}.app{max-width:680px;margin:auto}.screen{display:none}.screen.active{display:block}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:24px;padding:20px;box-shadow:0 14px 34px #4b3c261f}
+h1{text-align:center;margin:4px 0 0;font-size:31px}.version,.subtitle{text-align:center;color:var(--muted)}.version{font-size:12px;margin:4px 0 12px}.subtitle{font-size:14px;line-height:1.6;margin:0 0 18px}
+.menu{display:grid;gap:13px}.menuBtn,.level,.primary,.secondary,.danger,.badge,.option{cursor:pointer;transition:.08s}
+.menuBtn,.level{width:100%;text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:17px;padding:16px;box-shadow:0 5px 0 var(--shadow)}
+.menuBtn strong,.level strong{display:block;font-size:18px;margin-bottom:5px}.menuBtn span,.level span{font-size:13px;color:var(--muted);line-height:1.5}
+.menuBtn:active,.level:active,.primary:active,.secondary:active,.danger:active,.option:active{transform:translateY(4px);box-shadow:0 2px 0 #0003}
 .top{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin-bottom:12px}
-.badge{
-  background:var(--paper);border:1px solid var(--line);border-radius:999px;
-  padding:8px 12px;font-weight:700;box-shadow:0 3px 0 #d8cdb8
-}
+.badge{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:8px 12px;font-weight:700;box-shadow:0 3px 0 #d8cdb8}
 .stats{text-align:center;color:var(--muted);font-size:13px}
-.progress-wrap{margin:0 0 12px}
-.progress-label{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-bottom:5px}
-.progress{height:8px;background:#e8decb;border-radius:999px;overflow:hidden}
-.progress span{display:block;width:50%;height:100%;background:var(--green);transition:.25s}
-.question{
-  background:var(--paper);border:1px solid var(--line);border-radius:22px;
-  padding:20px 12px;text-align:center;box-shadow:0 6px 0 #d8cdb8;margin-bottom:14px
-}
-.question small{display:block;color:var(--muted);font-weight:700;margin-bottom:6px}
-.question strong{display:block;font-size:34px;line-height:1.3}
-.hint,.legend{text-align:center;color:var(--muted);font-size:13px}
-.hint{margin-top:7px}.legend{margin:9px 0 12px}
-.options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.option{
-  background:var(--paper);border:1px solid var(--line);border-radius:14px;
-  min-height:54px;padding:9px 5px;font-size:16px;font-weight:800;color:var(--ink);
-  box-shadow:0 5px 0 var(--shadow);display:flex;justify-content:center;align-items:center;gap:7px
-}
-.option:before{content:"○";font-size:19px;color:#8e948f}
-.option.selected{background:var(--soft)!important;border-color:#79a79c;box-shadow:0 5px 0 #79a79c}
-.option.selected:before{content:"●";color:var(--green)}
-.major{background:var(--blue)}.minor{background:var(--orange)}.signature{background:#fffaf0}
-.feedback{display:none;border-radius:16px;padding:13px;margin-top:14px;text-align:center;font-weight:700;line-height:1.5}
-.feedback.show{display:block}.ok{background:#dff0e6;color:#235f47}.ng{background:#f6dddd;color:var(--red)}
-.actions{position:sticky;bottom:0;padding:16px 0 6px;background:linear-gradient(transparent,var(--ivory) 28%)}
-.primary,.secondary,.danger{width:100%;border:0;border-radius:16px;padding:15px 16px;font-size:17px;font-weight:800}
-.primary{background:var(--green);color:#fff;box-shadow:0 6px 0 var(--green2)}
-.secondary{background:#eee4d1;color:var(--ink);box-shadow:0 5px 0 #cfc0a7}
-.danger{background:#ead8d4;color:#793a35;box-shadow:0 5px 0 #c8aaa3}
-.retry{display:none;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.retry.show{display:grid}
-.confirm{display:none;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0}
-.confirm.show{display:block}.confirm p{text-align:center;margin:0 0 12px}.confirm .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.result{text-align:center}.result .icon{font-size:54px}.result h2{font-size:27px;margin:4px 0 12px}
-.summary{background:#fffaf0;border:1px solid var(--line);border-radius:16px;padding:14px;text-align:left;margin:12px 0 16px}
-.summary p{margin:7px 0}.resultBtns{display:grid;gap:11px}
-@media(max-width:380px){
-  .option{font-size:14px;min-height:50px}.options{gap:8px}.question strong{font-size:30px}
-}
+.sectionTitle{font-size:22px;margin:0 0 6px;text-align:center}.sectionLead{text-align:center;color:var(--muted);font-size:13px;line-height:1.6;margin:0 0 16px}
+.field{margin:14px 0}.field label{display:block;font-weight:800;margin-bottom:7px}.field select{width:100%;padding:13px;border:1px solid var(--line);border-radius:14px;background:white;font-size:17px}
+.segment{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 17px}.segment button{border:1px solid var(--line);border-radius:13px;padding:12px 5px;background:white;font-weight:800}.segment button.active{background:var(--soft);border-color:#79a79c}
+.learnCard{background:#fffaf0;border:1px solid var(--line);border-radius:19px;padding:15px;margin-top:14px}.learnGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.info{background:white;border:1px solid var(--line);border-radius:14px;padding:12px}.info small{display:block;color:var(--muted);margin-bottom:4px}.info strong{font-size:19px}
+.staffWrap{background:white;border:1px solid var(--line);border-radius:16px;padding:8px;margin-top:14px;overflow-x:auto}.staffWrap svg{display:block;min-width:560px;width:100%;height:auto}
+.noteNames{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-top:8px;min-width:560px;text-align:center;font-weight:800}.noteNames small{display:block;color:var(--muted);font-weight:500;margin-top:2px}
+.help{background:#eef5e5;border-radius:14px;padding:12px;font-size:13px;line-height:1.6;margin-top:14px}
+.levels{display:grid;gap:12px}.progress-wrap{margin:0 0 12px}.progress-label{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-bottom:5px}.progress{height:8px;background:#e8decb;border-radius:999px;overflow:hidden}.progress span{display:block;width:50%;height:100%;background:var(--green);transition:.25s}
+.question{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:20px 12px;text-align:center;box-shadow:0 6px 0 #d8cdb8;margin-bottom:14px}.question small{display:block;color:var(--muted);font-weight:700;margin-bottom:6px}.question strong{display:block;font-size:34px;line-height:1.3}.hint,.legend{text-align:center;color:var(--muted);font-size:13px}.hint{margin-top:7px}.legend{margin:9px 0 12px}
+.options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.option{background:var(--paper);border:1px solid var(--line);border-radius:14px;min-height:54px;padding:9px 5px;font-size:16px;font-weight:800;color:var(--ink);box-shadow:0 5px 0 var(--shadow)}.option.selected{background:var(--soft)!important;border-color:#79a79c}.major{background:var(--blue)}.minor{background:var(--orange)}.signature{background:#fffaf0}
+.feedback{display:none;border-radius:16px;padding:13px;margin-top:14px;text-align:center;font-weight:700;line-height:1.6}.feedback.show{display:block}.ok{background:#dff0e6;color:#235f47}.ng{background:#f6dddd;color:var(--red)}
+.actions{position:sticky;bottom:0;padding:16px 0 6px;background:linear-gradient(transparent,var(--ivory) 28%);display:grid;gap:10px}.primary,.secondary,.danger{width:100%;border:0;border-radius:16px;padding:15px 16px;font-size:17px;font-weight:800}.primary{background:var(--green);color:#fff;box-shadow:0 6px 0 var(--green2)}.secondary{background:#eee4d1;color:var(--ink);box-shadow:0 5px 0 #cfc0a7}.danger{background:#ead8d4;color:#793a35;box-shadow:0 5px 0 #c8aaa3}
+.confirm{display:none;background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0}.confirm.show{display:block}.confirm p{text-align:center;margin:0 0 12px}.confirm .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.result{text-align:center}.summary{background:#fffaf0;border:1px solid var(--line);border-radius:16px;padding:14px;text-align:left;margin:12px 0 16px}.summary p{margin:7px 0}.resultBtns{display:grid;gap:11px}
+@media(max-width:420px){.options{grid-template-columns:repeat(2,minmax(0,1fr))}.question strong{font-size:29px}.learnGrid{grid-template-columns:1fr}.segment button{font-size:14px}}
 </style>
 </head>
-<body>
-<div class="app">
-<section id="home" class="screen active">
-  <div class="panel">
-    <h1>調号マスター</h1>
-    <div class="version">Version 0.4</div>
-    <p class="subtitle">メジャーキーを覚えたら、続けて平行調も身につけよう。</p>
-    <div class="circle">
-      <svg viewBox="0 0 520 520" role="img" aria-label="五度圏">
-        <circle cx="260" cy="260" r="220" fill="#fbf3df" stroke="#d8cfbb" stroke-width="3"/>
-        <circle cx="260" cy="260" r="148" fill="#edf4e5" stroke="#cbd6c0" stroke-width="3"/>
-        <circle cx="260" cy="260" r="78" fill="#fffdf6" stroke="#d8cfbb" stroke-width="3"/>
-        <text x="260" y="250" text-anchor="middle" font-size="28" font-weight="800">五度圏</text>
-        <text x="260" y="278" text-anchor="middle" font-size="14" fill="#6d756f">Circle of Fifths</text>
-        <g font-size="25" font-weight="800" text-anchor="middle">
-          <text x="260" y="63">C</text><text x="362" y="91">G</text><text x="437" y="165">D</text>
-          <text x="463" y="267">A</text><text x="437" y="369">E</text><text x="362" y="444">B</text>
-          <text x="260" y="470">F♯</text><text x="158" y="444">D♭</text><text x="83" y="369">A♭</text>
-          <text x="57" y="267">E♭</text><text x="83" y="165">B♭</text><text x="158" y="91">F</text>
-        </g>
-        <g font-size="19" font-weight="700" text-anchor="middle" fill="#465a53">
-          <text x="260" y="128">Am</text><text x="326" y="146">Em</text><text x="374" y="194">Bm</text>
-          <text x="392" y="262">F♯m</text><text x="374" y="330">C♯m</text><text x="326" y="379">G♯m</text>
-          <text x="260" y="396">D♯m</text><text x="194" y="379">B♭m</text><text x="146" y="330">Fm</text>
-          <text x="128" y="262">Cm</text><text x="146" y="194">Gm</text><text x="194" y="146">Dm</text>
-        </g>
-      </svg>
-    </div>
-    <div class="levels">
-      <button class="level" data-level="1">
-        <strong>Level 1　基本</strong>
-        <span>「調号 → メジャーキー」に正解したら、続けて平行調を答えます。</span>
-      </button>
-      <button class="level" data-level="2">
-        <strong>Level 2　逆向き問題</strong>
-        <span>「メジャーキー → 調号」に正解したら、続けて平行調を答えます。</span>
-      </button>
-      <button class="level" data-level="3">
-        <strong>Level 3　総合問題</strong>
-        <span>基本と逆向きをランダムに出題し、毎回平行調まで確認します。</span>
-      </button>
-    </div>
-  </div>
-</section>
+<body><div class="app">
+
+<section id="home" class="screen active"><div class="panel">
+<h1>調号マスター</h1><div class="version">Version 0.5</div>
+<p class="subtitle">まず見て覚える。次に実践する。<br>実音・E♭・B♭の譜面にも対応。</p>
+<div class="menu">
+<button class="menuBtn" id="learnBtn"><strong>📖 はじめて学ぶ</strong><span>キー、調号、平行調、スケールを五線譜で確認します。</span></button>
+<button class="menuBtn" id="quizMenuBtn"><strong>🎯 クイズに挑戦</strong><span>調号と平行調を、好きなだけ実践します。「わからない」も選べます。</span></button>
+</div></div></section>
+
+<section id="learn" class="screen"><div class="top"><button class="badge homeBack">← TOP</button><div class="stats">学習ページ</div><span></span></div>
+<div class="panel">
+<h2 class="sectionTitle">見て覚える</h2><p class="sectionLead">基準となる実音のキーを選び、表示する管を切り替えてください。</p>
+<div class="field"><label for="concertKey">実音のメジャーキー</label><select id="concertKey"></select></div>
+<div class="segment" id="instrumentBtns">
+<button data-inst="C" class="active">実音 → C</button><button data-inst="Eb">E♭</button><button data-inst="Bb">B♭</button>
+</div>
+<div id="learnCard" class="learnCard">
+<div class="learnGrid">
+<div class="info"><small>表示するキー</small><strong id="displayKey"></strong></div>
+<div class="info"><small>平行調</small><strong id="relativeKey"></strong></div>
+<div class="info"><small>調号</small><strong id="signatureInfo"></strong></div>
+<div class="info"><small>スケール</small><strong id="scaleTitle"></strong></div>
+</div>
+<div class="staffWrap"><svg id="staff" viewBox="0 0 640 230" aria-label="スケールの五線譜"></svg><div id="noteNames" class="noteNames"></div></div>
+<div class="help">実音Cメジャーは、E♭管ではAメジャー、B♭管ではDメジャーとして読みます。五線譜の下には音名も表示しています。</div>
+</div>
+</div></section>
+
+<section id="quizMenu" class="screen"><div class="top"><button class="badge homeBack">← TOP</button><div class="stats">クイズ</div><span></span></div>
+<div class="panel"><h2 class="sectionTitle">レベルを選ぶ</h2><p class="sectionLead">制限時間なし。自分のタイミングで終了できます。</p>
+<div class="levels">
+<button class="level" data-level="1"><strong>Level 1　基本</strong><span>調号 → メジャーキー → 平行調</span></button>
+<button class="level" data-level="2"><strong>Level 2　逆向き</strong><span>メジャーキー → 調号 → 平行調</span></button>
+<button class="level" data-level="3"><strong>Level 3　総合</strong><span>基本と逆向きをランダムに出題</span></button>
+</div></div></section>
 
 <section id="quiz" class="screen">
-  <div class="top">
-    <div id="levelBadge" class="badge">Level 1</div>
-    <div id="stats" class="stats">正解 0　不正解 0</div>
-    <button id="endBtn" class="badge" type="button">終了</button>
-  </div>
-
-  <div class="progress-wrap">
-    <div class="progress-label"><span id="setLabel">セット 1</span><span id="stepLabel">1 / 2</span></div>
-    <div class="progress"><span id="progressBar"></span></div>
-  </div>
-
-  <div id="confirm" class="confirm">
-    <p>ここで終了して結果を表示しますか？</p>
-    <div class="row">
-      <button id="continueBtn" class="secondary" type="button">続ける</button>
-      <button id="confirmEndBtn" class="danger" type="button">終了する</button>
-    </div>
-  </div>
-
-  <div class="question">
-    <small id="qType"></small>
-    <strong id="qText"></strong>
-    <div id="qHint" class="hint"></div>
-  </div>
-
-  <div id="legend" class="legend"></div>
-  <div id="options" class="options"></div>
-  <div id="feedback" class="feedback" aria-live="polite"></div>
-
-  <div id="retry" class="retry">
-    <button id="retryBtn" class="secondary" type="button">もう一度回答する</button>
-    <button id="showAnswerBtn" class="primary" type="button">答えを見る</button>
-  </div>
-
-  <div id="answerArea" class="actions">
-    <button id="answerBtn" class="primary" type="button">回答する</button>
-  </div>
+<div class="top"><div id="levelBadge" class="badge">Level 1</div><div id="stats" class="stats">正解 0　不正解 0</div><button id="endBtn" class="badge">終了</button></div>
+<div class="progress-wrap"><div class="progress-label"><span id="setLabel">セット 1</span><span id="stepLabel">1 / 2</span></div><div class="progress"><span id="progressBar"></span></div></div>
+<div id="confirm" class="confirm"><p>ここで終了して結果を表示しますか？</p><div class="row"><button id="continueBtn" class="secondary">続ける</button><button id="confirmEndBtn" class="danger">終了する</button></div></div>
+<div class="question"><small id="qType"></small><strong id="qText"></strong><div id="qHint" class="hint"></div></div>
+<div id="legend" class="legend"></div><div id="options" class="options"></div><div id="feedback" class="feedback" aria-live="polite"></div>
+<div class="actions" id="answerArea"><button id="answerBtn" class="primary">回答する</button><button id="unknownBtn" class="secondary">わからない（答えを見る）</button></div>
 </section>
 
-<section id="result" class="screen">
-  <div class="panel result">
-    <div class="icon">🎷</div>
-    <h2>今回の結果</h2>
-    <div id="summary" class="summary"></div>
-    <div class="resultBtns">
-      <button id="sameBtn" class="primary" type="button">同じレベルを続ける</button>
-      <button id="homeBtn" class="secondary" type="button">レベル選択へ戻る</button>
-    </div>
-  </div>
-</section>
+<section id="result" class="screen"><div class="panel result"><div style="font-size:54px">🎷</div><h2>今回の結果</h2><div id="summary" class="summary"></div><div class="resultBtns"><button id="sameBtn" class="primary">同じレベルを続ける</button><button id="quizBackBtn" class="secondary">レベル選択へ戻る</button><button class="secondary homeBack">TOPへ戻る</button></div></div></section>
+
 </div>
-
 <script>
-const DATA=[
-  ['調号なし','C','Am'],
-  ['♯が1つ','G','Em'],['♯が2つ','D','Bm'],['♯が3つ','A','F♯m'],
-  ['♯が4つ','E','C♯m'],['♯が5つ','B','G♯m'],['♯が6つ','F♯','D♯m'],
-  ['♭が1つ','F','Dm'],['♭が2つ','B♭','Gm'],['♭が3つ','E♭','Cm'],
-  ['♭が4つ','A♭','Fm'],['♭が5つ','D♭','B♭m']
-].map(([signature,major,minor])=>({signature,major,minor}));
-
-const MAJORS=DATA.map(x=>x.major);
-const MINORS=DATA.map(x=>x.minor);
-const SIGNATURES=DATA.map(x=>x.signature);
+const KEYS = [
+{name:'C',pc:0,minor:'Am',sig:'調号なし',notes:['C','D','E','F','G','A','B','C']},
+{name:'G',pc:7,minor:'Em',sig:'♯が1つ',notes:['G','A','B','C','D','E','F♯','G']},
+{name:'D',pc:2,minor:'Bm',sig:'♯が2つ',notes:['D','E','F♯','G','A','B','C♯','D']},
+{name:'A',pc:9,minor:'F♯m',sig:'♯が3つ',notes:['A','B','C♯','D','E','F♯','G♯','A']},
+{name:'E',pc:4,minor:'C♯m',sig:'♯が4つ',notes:['E','F♯','G♯','A','B','C♯','D♯','E']},
+{name:'B',pc:11,minor:'G♯m',sig:'♯が5つ',notes:['B','C♯','D♯','E','F♯','G♯','A♯','B']},
+{name:'F♯',pc:6,minor:'D♯m',sig:'♯が6つ',notes:['F♯','G♯','A♯','B','C♯','D♯','E♯','F♯']},
+{name:'F',pc:5,minor:'Dm',sig:'♭が1つ',notes:['F','G','A','B♭','C','D','E','F']},
+{name:'B♭',pc:10,minor:'Gm',sig:'♭が2つ',notes:['B♭','C','D','E♭','F','G','A','B♭']},
+{name:'E♭',pc:3,minor:'Cm',sig:'♭が3つ',notes:['E♭','F','G','A♭','B♭','C','D','E♭']},
+{name:'A♭',pc:8,minor:'Fm',sig:'♭が4つ',notes:['A♭','B♭','C','D♭','E♭','F','G','A♭']},
+{name:'D♭',pc:1,minor:'B♭m',sig:'♭が5つ',notes:['D♭','E♭','F','G♭','A♭','B♭','C','D♭']}
+];
+const BY_PC={0:'C',1:'D♭',2:'D',3:'E♭',4:'E',5:'F',6:'F♯',7:'G',8:'A♭',9:'A',10:'B♭',11:'B'};
 const $=id=>document.getElementById(id);
+const show=id=>{document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0)};
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 
-let level=1;
-let currentData=null;
-let currentQuestion=null;
-let step=1;
-let setCount=0;
-let selected=null;
-let locked=false;
-let correct=0;
-let incorrect=0;
-let attempts=0;
-let completedSets=0;
-let lastDataIndex=-1;
-
-function shuffle(items){
-  const a=[...items];
-  for(let i=a.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [a[i],a[j]]=[a[j],a[i]];
-  }
-  return a;
+let inst='C';
+KEYS.forEach(k=>{const o=document.createElement('option');o.value=k.name;o.textContent=k.name+'メジャー';$('concertKey').appendChild(o)});
+function keyByName(n){return KEYS.find(k=>k.name===n)}
+function transposedKey(){
+ const base=keyByName($('concertKey').value||'C');
+ const add=inst==='Eb'?9:inst==='Bb'?2:0;
+ return keyByName(BY_PC[(base.pc+add)%12]);
 }
-
-function show(id){
-  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));
-  $(id).classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
+function renderLearn(){
+ const k=transposedKey();
+ $('displayKey').textContent=k.name+'メジャー';
+ $('relativeKey').textContent=k.minor;
+ $('signatureInfo').textContent=k.sig;
+ $('scaleTitle').textContent=k.name+'メジャースケール';
+ drawStaff(k.notes);
+ $('noteNames').innerHTML=k.notes.map((n,i)=>`<div>${n}<small>${solfege(n)}</small></div>`).join('');
 }
-
-function pickData(){
-  let index;
-  do{
-    index=Math.floor(Math.random()*DATA.length);
-  }while(DATA.length>1 && index===lastDataIndex);
-  lastDataIndex=index;
-  return DATA[index];
+function solfege(n){return ({C:'ド',D:'レ',E:'ミ',F:'ファ',G:'ソ',A:'ラ',B:'シ'})[n[0]]+(n.slice(1)||'')}
+function drawStaff(notes){
+ const svg=$('staff'); let s='';
+ for(let i=0;i<5;i++){const y=72+i*22;s+=`<line x1="65" y1="${y}" x2="610" y2="${y}" stroke="#25302f" stroke-width="2"/>`}
+ s+=`<text x="18" y="143" font-size="78">𝄞</text>`;
+ const letterSteps={C:0,D:1,E:2,F:3,G:4,A:5,B:6};
+ let octave=4,last=-1;
+ notes.forEach((n,i)=>{
+   const l=n[0]; let step=letterSteps[l]+7*(octave-4);
+   if(i>0 && letterSteps[l]<=last) octave++;
+   step=letterSteps[l]+7*(octave-4); last=letterSteps[l];
+   const y=160-step*11, x=105+i*67;
+   if(y>160){s+=`<line x1="${x-16}" y1="160" x2="${x+16}" y2="160" stroke="#25302f" stroke-width="2"/>`}
+   if(y<72){for(let ly=50;ly>=y;ly-=22)s+=`<line x1="${x-16}" y1="${ly}" x2="${x+16}" y2="${ly}" stroke="#25302f" stroke-width="2"/>`}
+   const acc=n.slice(1);
+   if(acc)s+=`<text x="${x-25}" y="${y+7}" font-size="23" font-weight="700">${acc}</text>`;
+   s+=`<ellipse cx="${x}" cy="${y}" rx="11" ry="8" transform="rotate(-18 ${x} ${y})" fill="#25302f"/><line x1="${x+10}" y1="${y}" x2="${x+10}" y2="${y-38}" stroke="#25302f" stroke-width="3"/>`;
+ });
+ svg.innerHTML=s;
 }
+$('concertKey').onchange=renderLearn;
+document.querySelectorAll('#instrumentBtns button').forEach(b=>b.onclick=()=>{inst=b.dataset.inst;document.querySelectorAll('#instrumentBtns button').forEach(x=>x.classList.toggle('active',x===b));renderLearn()});
 
-function buildFirstQuestion(d){
-  const direction=level===1?'signatureToMajor':
-                  level===2?'majorToSignature':
-                  Math.random()<.5?'signatureToMajor':'majorToSignature';
+const MAJORS=KEYS.map(k=>k.name), MINORS=KEYS.map(k=>k.minor), SIGS=KEYS.map(k=>k.sig);
+let level=1,current=null,q=null,step=1,setCount=0,selected=null,correct=0,incorrect=0,unknown=0,attempts=0,completed=0,last=-1,locked=false;
+function pick(){let i;do{i=Math.floor(Math.random()*KEYS.length)}while(i===last);last=i;return KEYS[i]}
+function q1(k){const dir=level===1?'s2m':level===2?'m2s':Math.random()<.5?'s2m':'m2s';return dir==='s2m'?{label:'第1問　調号からメジャーキー',text:k.sig,answer:k.name,choices:shuffle(MAJORS),style:'major',hint:'メジャーキーを選んでください'}:{label:'第1問　メジャーキーから調号',text:k.name+'メジャー',answer:k.sig,choices:shuffle(SIGS),style:'signature',hint:'調号を選んでください'}}
+function q2(k){return {label:'第2問　平行調',text:k.name+'メジャーの平行調は？',answer:k.minor,choices:shuffle(MINORS),style:'minor',hint:'マイナーキーを選んでください'}}
+function start(n){level=n;correct=incorrect=unknown=attempts=completed=setCount=0;last=-1;$('levelBadge').textContent='Level '+n;updateStats();show('quiz');startSet()}
+function startSet(){setCount++;step=1;current=pick();q=q1(current);renderQ()}
+function renderQ(){selected=null;locked=false;$('feedback').className='feedback';$('answerArea').style.display='grid';$('confirm').className='confirm';$('setLabel').textContent='セット '+setCount;$('stepLabel').textContent=step+' / 2';$('progressBar').style.width=step===1?'50%':'100%';$('qType').textContent=q.label;$('qText').textContent=q.text;$('qHint').textContent=q.hint;$('legend').textContent=q.style==='minor'?'平行調から選択':q.style==='major'?'メジャーキーから選択':'調号から選択';const w=$('options');w.innerHTML='';q.choices.forEach(c=>{const b=document.createElement('button');b.className='option '+q.style;b.textContent=c;b.onclick=()=>{if(locked)return;selected=c;document.querySelectorAll('.option').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')};w.appendChild(b)})}
+function nextAfter(ms=900){setTimeout(()=>{if(step===1){step=2;q=q2(current);renderQ()}else{completed++;startSet()}},ms)}
+function answer(){if(!selected){$('feedback').textContent='答えを1つ選んでください';$('feedback').className='feedback show ng';return}locked=true;attempts++;if(selected===q.answer){correct++;updateStats();$('feedback').textContent=step===1?'正解！ 次は平行調です。':'正解！ 1セット完了です。';$('feedback').className='feedback show ok';$('answerArea').style.display='none';nextAfter()}else{incorrect++;updateStats();$('feedback').textContent=`不正解です。正解は「${q.answer}」です。平行調は「${current.minor}」です。`;$('feedback').className='feedback show ng';$('answerArea').style.display='none';nextAfter(1500)}}
+function unknownAnswer(){unknown++;updateStats();locked=true;$('feedback').textContent=`答え：${current.name}メジャー ／ 平行調：${current.minor} ／ ${current.sig}`;$('feedback').className='feedback show ok';$('answerArea').style.display='none';setTimeout(startSet,1800)}
+function updateStats(){$('stats').textContent=`正解 ${correct}　不正解 ${incorrect}　わからない ${unknown}`}
+function finish(){const rate=attempts?Math.round(correct/attempts*100):0;show('result');$('summary').innerHTML=`<p><strong>レベル：</strong>Level ${level}</p><p><strong>完了セット：</strong>${completed}</p><p><strong>回答回数：</strong>${attempts}</p><p><strong>正解：</strong>${correct}</p><p><strong>不正解：</strong>${incorrect}</p><p><strong>わからない：</strong>${unknown}</p><p><strong>正答率：</strong>${rate}%</p>`}
 
-  if(direction==='signatureToMajor'){
-    return {
-      label:'第1問　調号からメジャーキー',
-      text:d.signature,
-      answer:d.major,
-      choices:shuffle(MAJORS),
-      style:'major',
-      hint:'対応するメジャーキーを1つ選んでください'
-    };
-  }
-
-  return {
-    label:'第1問　メジャーキーから調号',
-    text:d.major,
-    answer:d.signature,
-    choices:shuffle(SIGNATURES),
-    style:'signature',
-    hint:'このキーの♯・♭の数を選んでください'
-  };
-}
-
-function buildMinorQuestion(d){
-  return {
-    label:'第2問　平行調',
-    text:d.major+' の平行調は？',
-    answer:d.minor,
-    choices:shuffle(MINORS),
-    style:'minor',
-    hint:'m付きのキーを1つ選んでください'
-  };
-}
-
-function start(n){
-  level=n;
-  correct=0;
-  incorrect=0;
-  attempts=0;
-  completedSets=0;
-  setCount=0;
-  lastDataIndex=-1;
-  $('levelBadge').textContent='Level '+n;
-  updateStats();
-  show('quiz');
-  startSet();
-}
-
-function startSet(){
-  setCount++;
-  step=1;
-  currentData=pickData();
-  currentQuestion=buildFirstQuestion(currentData);
-  render();
-}
-
-function render(){
-  selected=null;
-  locked=false;
-  $('feedback').className='feedback';
-  $('retry').className='retry';
-  $('answerArea').style.display='block';
-  $('confirm').className='confirm';
-
-  $('setLabel').textContent='セット '+setCount;
-  $('stepLabel').textContent=step+' / 2';
-  $('progressBar').style.width=(step===1?'50%':'100%');
-
-  $('qType').textContent=currentQuestion.label;
-  $('qText').textContent=currentQuestion.text;
-  $('qHint').textContent=currentQuestion.hint;
-  $('legend').textContent=currentQuestion.style==='minor'
-    ?'平行調（マイナーキー）から選択'
-    :currentQuestion.style==='major'
-      ?'メジャーキーから選択'
-      :'調号から選択';
-
-  const wrap=$('options');
-  wrap.innerHTML='';
-  currentQuestion.choices.forEach(choice=>{
-    const button=document.createElement('button');
-    button.type='button';
-    button.className='option '+currentQuestion.style;
-    button.textContent=choice;
-    button.onclick=()=>{
-      if(locked)return;
-      selected=choice;
-      document.querySelectorAll('.option').forEach(x=>x.classList.remove('selected'));
-      button.classList.add('selected');
-    };
-    wrap.appendChild(button);
-  });
-}
-
-function answer(){
-  if(!selected){
-    $('feedback').textContent='答えを1つ選んでください';
-    $('feedback').className='feedback show ng';
-    return;
-  }
-
-  locked=true;
-  attempts++;
-
-  if(selected===currentQuestion.answer){
-    correct++;
-    updateStats();
-    $('feedback').textContent=step===1
-      ?'正解！ 次は、このメジャーキーの平行調です。'
-      :'正解！ 1セット完了です。';
-    $('feedback').className='feedback show ok';
-    $('answerArea').style.display='none';
-
-    setTimeout(()=>{
-      if(step===1){
-        step=2;
-        currentQuestion=buildMinorQuestion(currentData);
-        render();
-      }else{
-        completedSets++;
-        startSet();
-      }
-    },850);
-  }else{
-    incorrect++;
-    updateStats();
-    $('feedback').textContent='不正解です。もう一度考えてみましょう。';
-    $('feedback').className='feedback show ng';
-    $('answerArea').style.display='none';
-    $('retry').className='retry show';
-  }
-}
-
-function retry(){
-  selected=null;
-  locked=false;
-  document.querySelectorAll('.option').forEach(x=>x.classList.remove('selected'));
-  $('feedback').className='feedback';
-  $('retry').className='retry';
-  $('answerArea').style.display='block';
-}
-
-function showAnswer(){
-  $('feedback').textContent='正解は「'+currentQuestion.answer+'」です。';
-  $('feedback').className='feedback show ok';
-  $('retry').className='retry';
-
-  setTimeout(()=>{
-    if(step===1){
-      step=2;
-      currentQuestion=buildMinorQuestion(currentData);
-      render();
-    }else{
-      startSet();
-    }
-  },1200);
-}
-
-function updateStats(){
-  $('stats').textContent=`正解 ${correct}　不正解 ${incorrect}`;
-}
-
-function finish(){
-  const rate=attempts?Math.round(correct/attempts*100):0;
-  show('result');
-  $('summary').innerHTML=`
-    <p><strong>レベル：</strong>Level ${level}</p>
-    <p><strong>完了したセット：</strong>${completedSets}セット</p>
-    <p><strong>回答回数：</strong>${attempts}回</p>
-    <p><strong>正解：</strong>${correct}回</p>
-    <p><strong>不正解：</strong>${incorrect}回</p>
-    <p><strong>正答率：</strong>${rate}%</p>
-  `;
-}
-
-document.querySelectorAll('.level').forEach(button=>{
-  button.onclick=()=>start(Number(button.dataset.level));
-});
-$('answerBtn').onclick=answer;
-$('retryBtn').onclick=retry;
-$('showAnswerBtn').onclick=showAnswer;
-$('endBtn').onclick=()=>$('confirm').className='confirm show';
-$('continueBtn').onclick=()=>$('confirm').className='confirm';
-$('confirmEndBtn').onclick=finish;
-$('sameBtn').onclick=()=>start(level);
-$('homeBtn').onclick=()=>show('home');
-</script>
-</body>
-</html>
+$('learnBtn').onclick=()=>{show('learn');renderLearn()};$('quizMenuBtn').onclick=()=>show('quizMenu');document.querySelectorAll('.homeBack').forEach(b=>b.onclick=()=>show('home'));document.querySelectorAll('.level').forEach(b=>b.onclick=()=>start(Number(b.dataset.level)));
+$('answerBtn').onclick=answer;$('unknownBtn').onclick=unknownAnswer;$('endBtn').onclick=()=>$('confirm').className='confirm show';$('continueBtn').onclick=()=>$('confirm').className='confirm';$('confirmEndBtn').onclick=finish;$('sameBtn').onclick=()=>start(level);$('quizBackBtn').onclick=()=>show('quizMenu');
+renderLearn();
+</script></body></html>
