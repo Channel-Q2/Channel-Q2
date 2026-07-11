@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f7f0df">
-<title>調号マスター Version 0.5.2</title>
+<title>調号マスター Version 0.5.4</title>
 <style>
 :root{--ivory:#f7f0df;--paper:#fffdf7;--ink:#25302f;--muted:#6f756f;--line:#d7ccb6;--green:#3f7d70;--green2:#2f6258;--soft:#dceee8;--blue:#e8f0f7;--orange:#f6e8d8;--shadow:#cdbfa6;--red:#873838}
 *{box-sizing:border-box}
@@ -20,8 +20,7 @@ h1{text-align:center;margin:4px 0 0;font-size:31px}.version,.subtitle{text-align
 .field{margin:14px 0}.field label{display:block;font-weight:800;margin-bottom:7px}.field select{width:100%;padding:13px;border:1px solid var(--line);border-radius:14px;background:white;font-size:17px}
 .segment{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 17px}.segment button{border:1px solid var(--line);border-radius:13px;padding:12px 5px;background:white;font-weight:800}.segment button.active{background:var(--soft);border-color:#79a79c}
 .learnCard{background:#fffaf0;border:1px solid var(--line);border-radius:19px;padding:15px;margin-top:14px}.learnGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.info{background:white;border:1px solid var(--line);border-radius:14px;padding:12px}.info small{display:block;color:var(--muted);margin-bottom:4px}.info strong{font-size:19px}
-.staffWrap{background:white;border:1px solid var(--line);border-radius:16px;padding:8px;margin-top:14px;overflow-x:auto}.staffWrap svg{display:block;min-width:620px;width:100%;height:auto}
-.noteNames{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin:8px 4px 0 204px;min-width:416px;text-align:center;font-weight:800}.noteNames small{display:block;color:var(--muted);font-weight:500;margin-top:2px}.help{background:#eef5e5;border-radius:14px;padding:12px;font-size:13px;line-height:1.6;margin-top:14px}
+.staffWrap{background:white;border:1px solid var(--line);border-radius:16px;padding:6px;margin-top:14px;overflow:hidden}.staffWrap svg{display:block;width:100%;max-width:100%;height:auto}.noteNames{display:none}.help{background:#eef5e5;border-radius:14px;padding:12px;font-size:13px;line-height:1.6;margin-top:14px}
 .progress-wrap{margin:0 0 12px}.progress-label{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-bottom:5px}.progress{height:8px;background:#e8decb;border-radius:999px;overflow:hidden}.progress span{display:block;width:50%;height:100%;background:var(--green)}
 .question{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:20px 12px;text-align:center;box-shadow:0 6px 0 #d8cdb8;margin-bottom:14px}.question small{display:block;color:var(--muted);font-weight:700;margin-bottom:6px}.question strong{display:block;font-size:34px}.hint,.legend{text-align:center;color:var(--muted);font-size:13px}.options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.option{background:var(--paper);border:1px solid var(--line);border-radius:14px;min-height:54px;padding:9px 5px;font-size:16px;font-weight:800;color:var(--ink);box-shadow:0 5px 0 var(--shadow)}.option.selected{background:var(--soft)!important}.major{background:var(--blue)}.minor{background:var(--orange)}.signature{background:#fffaf0}
 .feedback{display:none;border-radius:16px;padding:13px;margin-top:14px;text-align:center;font-weight:700}.feedback.show{display:block}.ok{background:#dff0e6;color:#235f47}.ng{background:#f6dddd;color:var(--red)}
@@ -31,8 +30,8 @@ h1{text-align:center;margin:4px 0 0;font-size:31px}.version,.subtitle{text-align
 </style>
 </head>
 <body><div class="app">
-<section id="home" class="screen active"><div class="panel"><h1>調号マスター</h1><div class="version">Version 0.5.2</div><p class="subtitle">まず見て覚える。次に実践する。<br>実音・E♭・B♭の譜面にも対応。</p><div class="menu"><button class="menuBtn" id="learnBtn"><strong>📖 はじめて学ぶ</strong><span>キー、調号、平行調、スケールを五線譜で確認します。</span></button><button class="menuBtn" id="quizMenuBtn"><strong>🎯 クイズに挑戦</strong><span>調号と平行調を、好きなだけ実践します。</span></button></div></div></section>
-<section id="learn" class="screen"><div class="top"><button class="badge homeBack">← TOP</button><div class="stats">学習ページ</div><span></span></div><div class="panel"><h2 class="sectionTitle">見て覚える</h2><p class="sectionLead">実音のキーを選び、表示する管を切り替えてください。</p><div class="field"><label for="concertKey">実音のメジャーキー</label><select id="concertKey"></select></div><div class="segment" id="instrumentBtns"><button data-inst="C" class="active">実音 → C</button><button data-inst="Eb">E♭</button><button data-inst="Bb">B♭</button></div><div class="learnCard"><div class="learnGrid"><div class="info"><small>表示するキー</small><strong id="displayKey"></strong></div><div class="info"><small>平行調</small><strong id="relativeKey"></strong></div><div class="info"><small>調号</small><strong id="signatureInfo"></strong></div><div class="info"><small>スケール</small><strong id="scaleTitle"></strong></div></div><div class="staffWrap"><svg id="staff" viewBox="0 0 640 230" aria-label="スケールの五線譜"></svg><div id="noteNames" class="noteNames"></div></div><div class="help">ト音記号と、そのキーに合った調号を五線譜上に表示します。</div></div></div></section>
+<section id="home" class="screen active"><div class="panel"><h1>調号マスター</h1><div class="version">Version 0.5.4</div><p class="subtitle">まず見て覚える。次に実践する。<br>実音・E♭・B♭の譜面にも対応。</p><div class="menu"><button class="menuBtn" id="learnBtn"><strong>📖 はじめて学ぶ</strong><span>キー、調号、平行調、スケールを五線譜で確認します。</span></button><button class="menuBtn" id="quizMenuBtn"><strong>🎯 クイズに挑戦</strong><span>調号と平行調を、好きなだけ実践します。</span></button></div></div></section>
+<section id="learn" class="screen"><div class="top"><button class="badge homeBack">← TOP</button><div class="stats">学習ページ</div><span></span></div><div class="panel"><h2 class="sectionTitle">見て覚える</h2><p class="sectionLead">実音のキーを選び、表示する管を切り替えてください。</p><div class="field"><label for="concertKey">実音のメジャーキー</label><select id="concertKey"></select></div><div class="segment" id="instrumentBtns"><button data-inst="C" class="active">実音 → C</button><button data-inst="Eb">E♭</button><button data-inst="Bb">B♭</button></div><div class="learnCard"><div class="learnGrid"><div class="info"><small>表示するキー</small><strong id="displayKey"></strong></div><div class="info"><small>平行調</small><strong id="relativeKey"></strong></div><div class="info"><small>調号</small><strong id="signatureInfo"></strong></div><div class="info"><small>スケール</small><strong id="scaleTitle"></strong></div></div><div class="staffWrap"><svg id="staff" viewBox="0 0 640 250" preserveAspectRatio="xMidYMid meet" aria-label="スケールの五線譜"></svg><div id="noteNames" class="noteNames"></div></div><div class="help">ト音記号と、そのキーに合った調号を五線譜上に表示します。</div></div></div></section>
 <section id="quizMenu" class="screen"><div class="top"><button class="badge homeBack">← TOP</button><div class="stats">クイズ</div><span></span></div><div class="panel"><h2 class="sectionTitle">レベルを選ぶ</h2><div class="levels"><button class="level" data-level="1"><strong>Level 1　基本</strong><span>調号 → メジャーキー → 平行調</span></button><button class="level" data-level="2"><strong>Level 2　逆向き</strong><span>メジャーキー → 調号 → 平行調</span></button><button class="level" data-level="3"><strong>Level 3　総合</strong><span>基本と逆向きをランダムに出題</span></button></div></div></section>
 <section id="quiz" class="screen"><div class="top"><div id="levelBadge" class="badge"></div><div id="stats" class="stats"></div><button id="endBtn" class="badge">終了</button></div><div class="progress-wrap"><div class="progress-label"><span id="setLabel"></span><span id="stepLabel"></span></div><div class="progress"><span id="progressBar"></span></div></div><div id="confirm" class="confirm"><p>終了して結果を表示しますか？</p><div class="row"><button id="continueBtn" class="secondary">続ける</button><button id="confirmEndBtn" class="danger">終了する</button></div></div><div class="question"><small id="qType"></small><strong id="qText"></strong><div id="qHint" class="hint"></div></div><div id="legend" class="legend"></div><div id="options" class="options"></div><div id="feedback" class="feedback"></div><div class="actions" id="answerArea"><button id="answerBtn" class="primary">回答する</button><button id="unknownBtn" class="secondary">わからない（答えを見る）</button></div></section>
 <section id="result" class="screen"><div class="panel"><h2 class="sectionTitle">今回の結果</h2><div id="summary" class="summary"></div><div class="resultBtns"><button id="sameBtn" class="primary">同じレベルを続ける</button><button id="quizBackBtn" class="secondary">レベル選択へ戻る</button><button class="secondary homeBack">TOPへ戻る</button></div></div></section>
@@ -60,21 +59,58 @@ KEYS.forEach(k=>{let o=document.createElement('option');o.value=k.name;o.textCon
 const keyByName=n=>KEYS.find(k=>k.name===n);
 function transposedKey(){let b=keyByName($('concertKey').value||'C'),add=inst==='Eb'?9:inst==='Bb'?2:0;return keyByName(BY_PC[(b.pc+add)%12])}
 function solfege(n){return ({C:'ド',D:'レ',E:'ミ',F:'ファ',G:'ソ',A:'ラ',B:'シ'})[n[0]]+(n.slice(1)||'')}
-function renderLearn(){let k=transposedKey();$('displayKey').textContent=k.name+'メジャー';$('relativeKey').textContent=k.minor;$('signatureInfo').textContent=k.sig;$('scaleTitle').textContent=k.name+'メジャースケール';drawStaff(k);$('noteNames').innerHTML=k.notes.map(n=>`<div>${n}<small>${solfege(n)}</small></div>`).join('')}
+function renderLearn(){let k=transposedKey();$('displayKey').textContent=k.name+'メジャー';$('relativeKey').textContent=k.minor;$('signatureInfo').textContent=k.sig;$('scaleTitle').textContent=k.name+'メジャースケール';drawStaff(k);$('noteNames').innerHTML=''}
 function drawStaff(k){
- const svg=$('staff'); let s='', top=70,gap=22,bottom=158;
- for(let i=0;i<5;i++){let y=top+i*gap;s+=`<line x1="30" y1="${y}" x2="620" y2="${y}" stroke="#25302f" stroke-width="2.2"/>`}
- // ト音記号は五線の上に重ねて表示
- s+=`<text x="42" y="158" font-size="108" font-family="Bravura, Apple Symbols, Segoe UI Symbol, serif" fill="#111">𝄞</text>`;
- // 調号（ト音記号の右）
- const sharpY=[70,103,59,92,125,81,114], flatY=[114,81,125,92,136,103,147];
- const ys=k.type==='sharp'?sharpY:flatY, mark=k.type==='sharp'?'♯':'♭';
- for(let i=0;i<k.count;i++){let x=118+i*17;s+=`<text x="${x}" y="${ys[i]+8}" font-size="28" font-family="serif" font-weight="700">${mark}</text>`}
- const steps={C:0,D:1,E:2,F:3,G:4,A:5,B:6};let oct=4,prev=-1;
- k.notes.forEach((n,i)=>{let l=n[0],cur=steps[l];if(i>0&&cur<=prev)oct++;prev=cur;let ds=cur+7*(oct-4),y=180-ds*11,x=220+i*52;
-   for(let ly=180;ly>=y;ly-=22){if(ly>bottom||ly<top)s+=`<line x1="${x-15}" y1="${ly}" x2="${x+15}" y2="${ly}" stroke="#25302f" stroke-width="2"/>`}
-   s+=`<ellipse cx="${x}" cy="${y}" rx="10.5" ry="7.5" transform="rotate(-18 ${x} ${y})" fill="#25302f"/>`;
-   if(y<=114)s+=`<line x1="${x-9}" y1="${y}" x2="${x-9}" y2="${y+38}" stroke="#25302f" stroke-width="3"/>`;else s+=`<line x1="${x+9}" y1="${y}" x2="${x+9}" y2="${y-38}" stroke="#25302f" stroke-width="3"/>`;
+ const svg=$('staff');
+ let s='';
+ const top=82, gap=20, bottom=162;
+ // 五線は五本だけ。下側に不要な横線は描かない。
+ for(let i=0;i<5;i++){
+   const y=top+i*gap;
+   s+=`<line x1="18" y1="${y}" x2="622" y2="${y}" stroke="#25302f" stroke-width="2.2"/>`;
+ }
+ // ト音記号を五線の内側に重ねる。
+ s+=`<text x="24" y="169" font-size="108" font-family="Apple Symbols, Bravura, Noto Music, Segoe UI Symbol, serif" fill="#111">𝄞</text>`;
+
+ // 調号をト音記号の右側、五線上の定位置に表示。
+ const sharpY=[82,112,72,102,132,92,122];
+ const flatY =[122,92,132,102,142,112,152];
+ const ys=k.type==='sharp'?sharpY:flatY;
+ const mark=k.type==='sharp'?'♯':'♭';
+ for(let i=0;i<k.count;i++){
+   const x=102+i*18;
+   s+=`<text x="${x}" y="${ys[i]+9}" font-size="30" font-family="Apple Symbols, serif" font-weight="700" fill="#111">${mark}</text>`;
+ }
+
+ // 調号の数に関係なく、8音が必ず1画面に収まる配置。
+ const xStart=190, xEnd=596, dx=(xEnd-xStart)/7;
+ const letters={C:0,D:1,E:2,F:3,G:4,A:5,B:6};
+ const tonicLetter=k.notes[0][0];
+ // C〜Fは5オクターブ、G〜Bは4オクターブから開始。
+ // Cメジャーは必ず C(ド) → D → E → F → G → A → B → C の順。
+ const baseStep=letters[tonicLetter] <= 3 ? letters[tonicLetter]+7 : letters[tonicLetter];
+
+ k.notes.forEach((n,i)=>{
+   const step=baseStep+i;
+   const y=122-step*10+70; // C5を第3間（y=122）に置く
+   const x=xStart+i*dx;
+
+   // 必要な音だけ上側の加線を表示。五線の下には描かない。
+   if(y<top){
+     for(let ly=top-20;ly>=y-1;ly-=20){
+       s+=`<line x1="${x-14}" y1="${ly}" x2="${x+14}" y2="${ly}" stroke="#25302f" stroke-width="2"/>`;
+     }
+   }
+
+   s+=`<ellipse cx="${x}" cy="${y}" rx="9.8" ry="7.1" transform="rotate(-18 ${x} ${y})" fill="#25302f"/>`;
+   if(y<=122){
+     s+=`<line x1="${x-8.5}" y1="${y}" x2="${x-8.5}" y2="${y+34}" stroke="#25302f" stroke-width="2.8"/>`;
+   }else{
+     s+=`<line x1="${x+8.5}" y1="${y}" x2="${x+8.5}" y2="${y-34}" stroke="#25302f" stroke-width="2.8"/>`;
+   }
+
+   s+=`<text x="${x}" y="212" text-anchor="middle" font-size="17" font-weight="800" fill="#25302f">${n}</text>`;
+   s+=`<text x="${x}" y="234" text-anchor="middle" font-size="14" fill="#6f756f">${solfege(n)}</text>`;
  });
  svg.innerHTML=s;
 }
